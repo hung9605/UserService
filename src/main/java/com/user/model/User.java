@@ -31,4 +31,7 @@ public class User implements Serializable{
 
     @Column(name = "enabled")
     Boolean enabled;
+    
+    @Column(name = "email", length = 50)
+    String email;
 }
