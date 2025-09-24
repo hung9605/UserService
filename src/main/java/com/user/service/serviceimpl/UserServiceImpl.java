@@ -28,12 +28,9 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User add(User user) throws Exception {
-		// TODO Auto-generated method stub
 		if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
-
-        // Kiểm tra email đã tồn tại chưa
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
         }
