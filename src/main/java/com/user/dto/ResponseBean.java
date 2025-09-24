@@ -8,8 +8,6 @@ public class ResponseBean {
     private String message;
     private AppHttpStatus status = AppHttpStatus.SUCCESS;
     
-    
-
     public ResponseBean() {
 		super();
 	}
@@ -43,5 +41,5 @@ public class ResponseBean {
 		this.data = data;
 	}
     
-    
+   
 }

@@ -8,6 +8,6 @@ import com.user.model.User;
 public interface UserService {
 	
 	List<UserDto> list() throws Exception;
-	User add(User user) throws Exception;
+	User add(UserDto dto) throws Exception;
 	void updateStatus(User user) throws Exception;
 }

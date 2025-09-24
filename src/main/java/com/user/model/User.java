@@ -1,7 +1,5 @@
 package com.user.model;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,7 +18,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class User implements Serializable{
+public class User extends BaseEntity{
 
     @Id
     @Column(name = "username", length = 50, nullable = false)

@@ -14,6 +14,7 @@ public interface UserMapper {
 	@Mapping(source = "status", target = "enabled")
 	User mapToModel(UserDto dto);
 	@Mapping(source = "enabled", target = "status")
+	@Mapping(target = "password", ignore = true)
 	UserDto maptoDto(User model);
 	
 	List<User> mapToModels(List<UserDto> dtos);

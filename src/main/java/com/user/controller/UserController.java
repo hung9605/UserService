@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.user.constants.CommonConstant;
 import com.user.dto.ResponseBean;
+import com.user.dto.UserDto;
 import com.user.model.User;
 import com.user.service.DashBoardService;
 import com.user.service.UserService;
@@ -40,9 +41,9 @@ public class UserController extends BaseController {
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<?> add(@RequestBody User user){
+	public ResponseEntity<?> add(@RequestBody UserDto dto){
 		try {
-			userService.add(user);
+			userService.add(dto);
 			return response(new ResponseBean(CommonConstant.OK));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
