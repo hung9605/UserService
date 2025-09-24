@@ -1,6 +1,7 @@
 package com.user.service.serviceimpl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,13 +34,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User add(UserDto dto) throws Exception {
 		
-		if (userRepository.findByUsername(dto.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
-        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
-        }
-        Objects.requireNonNull(dto.getRoles(), "Role must not be null!");
+		validateUserDto(dto);
         User user = userMapper.mapToModel(dto);
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		user.setPassword(encoder.encode(user.getPassword()));
@@ -56,5 +51,14 @@ public class UserServiceImpl implements UserService{
 		userRepository.save(user);
 		
 	}
+	
+	private void validateUserDto(UserDto dto) {
+	    userRepository.findByUsername(dto.getUsername())
+	            .ifPresent(u -> { throw new RuntimeException("Username already exists"); });
+	    userRepository.findByEmail(dto.getEmail())
+	            .ifPresent(u -> { throw new RuntimeException("Email already exists"); });
+	    Objects.requireNonNull(dto.getRoles(), "Role must not be null!");
+	}
+
 
 }
