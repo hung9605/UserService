@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dto.UserDto;
 import com.user.mapper.UserMapper;
@@ -53,12 +54,24 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	private void validateUserDto(UserDto dto) {
-	    userRepository.findByUsername(dto.getUsername())
-	            .ifPresent(u -> { throw new RuntimeException("Username already exists"); });
-	    userRepository.findByEmail(dto.getEmail())
-	            .ifPresent(u -> { throw new RuntimeException("Email already exists"); });
+//	    userRepository.findByUsername(dto.getUsername())
+//	            .ifPresent(u -> { throw new RuntimeException("Username already exists"); });
+//	    userRepository.findByEmail(dto.getEmail())
+//	            .ifPresent(u -> { throw new RuntimeException("Email already exists"); });
+		Objects.requireNonNull(dto.getStatus(), "Status must not be null!");
 	    Objects.requireNonNull(dto.getRoles(), "Role must not be null!");
 	}
+
+	@Override
+	@Transactional
+	public void updateEnable(String username,boolean status) throws Exception {
+		    User user = userRepository.findById(username)
+		                              .orElseThrow(() -> new RuntimeException("User not found"));
+		    user.setEnabled(status);
+		    userRepository.save(user);
+	}
+
+
 
 
 }
