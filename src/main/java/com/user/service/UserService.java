@@ -3,6 +3,7 @@ package com.user.service;
 import java.util.List;
 
 import com.user.dto.UserDto;
+import com.user.dto.UserPassDto;
 import com.user.model.User;
 
 public interface UserService {
@@ -11,4 +12,5 @@ public interface UserService {
 	User add(UserDto dto) throws Exception;
 	void updateStatus(User user) throws Exception;
 	void updateEnable(String username,boolean enable)throws Exception;
+	void changePass(UserPassDto dto) throws Exception;
 }
