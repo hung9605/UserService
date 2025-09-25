@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dto.UserDto;
+import com.user.dto.UserPassDto;
 import com.user.mapper.UserMapper;
 import com.user.model.Authority;
 import com.user.model.User;
@@ -72,6 +73,12 @@ public class UserServiceImpl implements UserService{
 		                              .orElseThrow(() -> new RuntimeException("User not found"));
 		    user.setEnabled(status);
 		    userRepository.save(user);
+	}
+
+	@Override
+	public void changePass(UserPassDto dto) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 
