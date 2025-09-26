@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService{
 		 if(!dto.getNewPass().equals(dto.getConfirmPass())) {
 			throw new RuntimeException("Password not same!");
 		 }
-		 
 		 user.setPassword(passwordEncoder.encode(dto.getNewPass()));
 		 userRepository.save(user);
 		
