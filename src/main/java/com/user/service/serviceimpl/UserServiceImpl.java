@@ -5,10 +5,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dto.UserDto;
+import com.user.dto.UserPassDto;
 import com.user.mapper.UserMapper;
 import com.user.model.Authority;
 import com.user.model.User;
@@ -25,6 +28,7 @@ public class UserServiceImpl implements UserService{
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
 	private final AuthorityRepository authorityRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public List<UserDto> list() throws Exception {
@@ -37,8 +41,8 @@ public class UserServiceImpl implements UserService{
 		
 		validateUserDto(dto);
         User user = userMapper.mapToModel(dto);
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		user.setPassword(encoder.encode(user.getPassword()));
+        //PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		User userSave = userRepository.save(user);
 		List<Authority> authorities = dto.getRoles().stream().map(item -> 
 		 new Authority(userSave.getUsername(), item.getCode())
@@ -69,6 +73,22 @@ public class UserServiceImpl implements UserService{
 		                              .orElseThrow(() -> new RuntimeException("User not found"));
 		    user.setEnabled(status);
 		    userRepository.save(user);
+	}
+
+	@Override
+	public void changePass(UserPassDto dto) throws Exception {
+		 User user = userRepository.findById(dto.getUsername())
+                 .orElseThrow(() -> new RuntimeException("User not found"));
+		 if(!passwordEncoder.matches(dto.getCurrentPass(), user.getPassword())) {
+			throw new RuntimeException("Password not match!"); 
+		 }
+		 if(!dto.getNewPass().equals(dto.getConfirmPass())) {
+			throw new RuntimeException("Password not same!");
+		 }
+		 
+		 user.setPassword(passwordEncoder.encode(dto.getNewPass()));
+		 userRepository.save(user);
+		
 	}
 
 

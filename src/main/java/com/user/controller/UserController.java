@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.user.constants.CommonConstant;
 import com.user.dto.ResponseBean;
 import com.user.dto.UserDto;
+import com.user.dto.UserPassDto;
 import com.user.model.User;
 import com.user.service.DashBoardService;
 import com.user.service.UserService;
@@ -80,6 +81,18 @@ public class UserController extends BaseController {
 	public ResponseEntity<?> dashbroad(){
 		try {
 			return response(new ResponseBean(dashBoardService.getAccountDashBoard()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return responseError(new ResponseBean(e.getMessage()), e);
+		}
+	}
+	
+	@PostMapping("/changepass")
+	public ResponseEntity<?> changepass(@RequestBody UserPassDto dto){
+		try {
+			userService.changePass(dto);
+			return response(new ResponseBean(CommonConstant.OK));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
