@@ -77,7 +77,17 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public void changePass(UserPassDto dto) throws Exception {
-		// TODO Auto-generated method stub
+		 User user = userRepository.findById(dto.getUsername())
+                 .orElseThrow(() -> new RuntimeException("User not found"));
+		 if(!passwordEncoder.matches(dto.getCurrentPass(), user.getPassword())) {
+			throw new RuntimeException("Password not match!"); 
+		 }
+		 if(!dto.getNewPass().equals(dto.getConfirmPass())) {
+			throw new RuntimeException("Password not same!");
+		 }
+		 
+		 user.setPassword(passwordEncoder.encode(dto.getNewPass()));
+		 userRepository.save(user);
 		
 	}
 
