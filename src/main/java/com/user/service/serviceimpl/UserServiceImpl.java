@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dto.UserDto;
 import com.user.dto.UserPassDto;
+import com.user.exception.UserNotFoundException;
 import com.user.mapper.UserMapper;
 import com.user.model.Authority;
 import com.user.model.User;
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void changePass(UserPassDto dto) throws Exception {
 		 User user = userRepository.findById(dto.getUsername())
-                 .orElseThrow(() -> new RuntimeException("User not found"));
+                 .orElseThrow(UserNotFoundException::new);
 		 if(!passwordEncoder.matches(dto.getCurrentPass(), user.getPassword())) {
 			throw new RuntimeException("Password not match!"); 
 		 }
@@ -87,7 +88,6 @@ public class UserServiceImpl implements UserService{
 		 }
 		 user.setPassword(passwordEncoder.encode(dto.getNewPass()));
 		 userRepository.save(user);
-		
 	}
 
 

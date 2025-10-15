@@ -89,15 +89,11 @@ public class UserController extends BaseController {
 	}
 	
 	@PostMapping("/changepass")
-	public ResponseEntity<?> changepass(@RequestBody UserPassDto dto){
-		try {
+	public ResponseEntity<?> changepass(@RequestBody UserPassDto dto) throws Exception{
+		
 			userService.changePass(dto);
 			return response(new ResponseBean(CommonConstant.OK));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
+		
 	}
 
 }
