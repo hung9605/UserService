@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.user.dto.UserDto;
 import com.user.dto.UserPassDto;
+import com.user.exception.PasswordConfirmMismatchException;
+import com.user.exception.PasswordNotMatchException;
 import com.user.exception.UserNotFoundException;
 import com.user.mapper.UserMapper;
 import com.user.model.Authority;
@@ -81,10 +83,10 @@ public class UserServiceImpl implements UserService{
 		 User user = userRepository.findById(dto.getUsername())
                  .orElseThrow(UserNotFoundException::new);
 		 if(!passwordEncoder.matches(dto.getCurrentPass(), user.getPassword())) {
-			throw new RuntimeException("Password not match!"); 
+			throw new PasswordNotMatchException();
 		 }
 		 if(!dto.getNewPass().equals(dto.getConfirmPass())) {
-			throw new RuntimeException("Password not same!");
+			throw new PasswordConfirmMismatchException();
 		 }
 		 user.setPassword(passwordEncoder.encode(dto.getNewPass()));
 		 userRepository.save(user);
