@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.user.constants.ErrorCode;
 import com.user.dto.ApiError;
+import com.user.exception.FieldNotBlankException;
 import com.user.exception.PasswordConfirmMismatchException;
 import com.user.exception.PasswordNotMatchException;
 import com.user.exception.UserNotFoundException;
@@ -47,6 +48,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiError(ErrorCode.PASSWORD_NOT_MATCH, message));
+    }
+    
+    @ExceptionHandler(FieldNotBlankException.class)
+    public ResponseEntity<ApiError> handleFieldNotBlankException(FieldNotBlankException ex) {
+    	String message = messageSource.getMessage("error.field.blank",null,null);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError(ErrorCode.FIELD_NOT_BLANK, message));
     }
     
 	

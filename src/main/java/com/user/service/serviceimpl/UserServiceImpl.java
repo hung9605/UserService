@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public List<UserDto> list() throws Exception {
 		// TODO Auto-generated method stub
-		return userMapper.mapToDtos(userRepository.findAll());
+		return userMapper.mapToDtos(userRepository.findAll(Sort.by(Sort.Direction.ASC,"username")));
 	}
 
 	@Override
@@ -44,7 +45,6 @@ public class UserServiceImpl implements UserService{
 		
 		validateUserDto(dto);
         User user = userMapper.mapToModel(dto);
-        //PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		User userSave = userRepository.save(user);
 		List<Authority> authorities = dto.getRoles().stream().map(item -> 
@@ -57,23 +57,18 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void updateStatus(User user) throws Exception {
 		userRepository.save(user);
-		
 	}
 	
 	private void validateUserDto(UserDto dto) {
-//	    userRepository.findByUsername(dto.getUsername())
-//	            .ifPresent(u -> { throw new RuntimeException("Username already exists"); });
-//	    userRepository.findByEmail(dto.getEmail())
-//	            .ifPresent(u -> { throw new RuntimeException("Email already exists"); });
 		Objects.requireNonNull(dto.getStatus(), "Status must not be null!");
 	    Objects.requireNonNull(dto.getRoles(), "Role must not be null!");
 	}
 
 	@Override
 	@Transactional
-	public void updateEnable(String username,boolean status) throws Exception {
+	public void updateEnable(String username,boolean status){
 		    User user = userRepository.findById(username)
-		                              .orElseThrow(() -> new RuntimeException("User not found"));
+		                              .orElseThrow(() -> new UserNotFoundException());
 		    user.setEnabled(status);
 		    userRepository.save(user);
 	}

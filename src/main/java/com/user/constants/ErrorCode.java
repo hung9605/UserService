@@ -8,4 +8,5 @@ public final class ErrorCode {
     public static final String PASSWORD_INCORRECT = "PASSWORD_INCORRECT";
     public static final String PASSWORD_NOT_MATCH = "PASSWORD_NOT_MATCH";
     public static final String INTERNAL_SERVERERROR = "INTERNAL_SERVERERROR";
+    public static final String FIELD_NOT_BLANK = "FIELD_NOT_BLANK";
 }

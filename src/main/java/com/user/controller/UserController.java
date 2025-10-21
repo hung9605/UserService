@@ -55,14 +55,8 @@ public class UserController extends BaseController {
 	
 	@PostMapping("/updateEnabled")
 	public ResponseEntity<?> updateEnabled(@RequestBody UserDto dto){
-		try {
 			userService.updateEnable(dto.getUsername(),dto.getStatus());
 			return response(new ResponseBean(CommonConstant.OK));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
 	}
 	
 	@PostMapping("/update")

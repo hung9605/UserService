@@ -11,6 +11,6 @@ public interface UserService {
 	List<UserDto> list() throws Exception;
 	User add(UserDto dto) throws Exception;
 	void updateStatus(User user) throws Exception;
-	void updateEnable(String username,boolean enable)throws Exception;
+	void updateEnable(String username,boolean enable);
 	void changePass(UserPassDto dto) throws Exception;
 }
