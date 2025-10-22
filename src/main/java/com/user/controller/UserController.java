@@ -32,13 +32,7 @@ public class UserController extends BaseController {
 	
 	@GetMapping("/list")
 	public ResponseEntity<?> list(){
-		try {
 			return response(new ResponseBean(userService.list()));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
 	}
 	
 	@PostMapping("/add")
@@ -55,26 +49,14 @@ public class UserController extends BaseController {
 	
 	@PostMapping("/updateEnabled")
 	public ResponseEntity<?> updateEnabled(@RequestBody UserDto dto){
-		try {
 			userService.updateEnable(dto.getUsername(),dto.getStatus());
 			return response(new ResponseBean(CommonConstant.OK));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
 	}
 	
 	@PostMapping("/update")
 	public ResponseEntity<?> update(@RequestBody User user){
-		try {
 			userService.updateStatus(user);
 			return response(new ResponseBean(CommonConstant.OK));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
 	}
 	
 	@GetMapping("/dashboard")
@@ -89,15 +71,11 @@ public class UserController extends BaseController {
 	}
 	
 	@PostMapping("/changepass")
-	public ResponseEntity<?> changepass(@RequestBody UserPassDto dto){
-		try {
+	public ResponseEntity<?> changepass(@RequestBody UserPassDto dto) throws Exception{
+		
 			userService.changePass(dto);
 			return response(new ResponseBean(CommonConstant.OK));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
+		
 	}
 
 }
