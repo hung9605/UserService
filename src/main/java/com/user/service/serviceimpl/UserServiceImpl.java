@@ -5,12 +5,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.user.dto.NotificationMessage;
 import com.user.dto.UserDto;
 import com.user.dto.UserPassDto;
 import com.user.exception.PasswordConfirmMismatchException;
@@ -33,10 +34,10 @@ public class UserServiceImpl implements UserService{
 	private final UserMapper userMapper;
 	private final AuthorityRepository authorityRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final SimpMessagingTemplate messagingTemplate;
 
 	@Override
 	public List<UserDto> list() {
-		// TODO Auto-generated method stub
 		return userMapper.mapToDtos(userRepository.findAll(Sort.by(Sort.Direction.ASC,"username")));
 	}
 
@@ -51,6 +52,9 @@ public class UserServiceImpl implements UserService{
 		 new Authority(userSave.getUsername(), item.getCode())
 		).collect(Collectors.toList());
 		authorityRepository.saveAll(authorities);
+		notify("User", "created");
+
+		
 		return user;
 	}
 
@@ -60,6 +64,7 @@ public class UserServiceImpl implements UserService{
 	        throw new UserNotFoundException();
 	    }
 		userRepository.save(user);
+		notify("User", "updated");
 	}
 	
 	private void validateUserDto(UserDto dto) {
@@ -74,6 +79,7 @@ public class UserServiceImpl implements UserService{
 		                              .orElseThrow(() -> new UserNotFoundException());
 		    user.setEnabled(status);
 		    userRepository.save(user);
+		    notify("User", "updated");
 	}
 
 	@Override
@@ -88,9 +94,12 @@ public class UserServiceImpl implements UserService{
 		 }
 		 user.setPassword(passwordEncoder.encode(dto.getNewPass()));
 		 userRepository.save(user);
+		 notify("User", "updated");
 	}
-
-
-
+	
+	private void notify(String entity, String action) {
+	    NotificationMessage message = new NotificationMessage(entity, action);
+	    messagingTemplate.convertAndSend("/topic/notifications", message);
+	}
 
 }

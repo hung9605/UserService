@@ -19,6 +19,7 @@ public class SecurityConfig {
 	        .authorizeHttpRequests(auth -> auth
 	            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
 	            .requestMatchers("/actuator/**").permitAll()
+	            .requestMatchers("/ws-notify/**").permitAll()
 	            .anyRequest().authenticated()
 	        )
 	        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
