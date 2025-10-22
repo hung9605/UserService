@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService{
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
-	public List<UserDto> list() throws Exception {
+	public List<UserDto> list() {
 		// TODO Auto-generated method stub
 		return userMapper.mapToDtos(userRepository.findAll(Sort.by(Sort.Direction.ASC,"username")));
 	}
@@ -55,7 +55,10 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void updateStatus(User user) throws Exception {
+	public void updateStatus(User user) {
+		if (!userRepository.existsById(user.getUsername())) {
+	        throw new UserNotFoundException();
+	    }
 		userRepository.save(user);
 	}
 	

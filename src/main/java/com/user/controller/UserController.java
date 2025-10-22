@@ -32,13 +32,7 @@ public class UserController extends BaseController {
 	
 	@GetMapping("/list")
 	public ResponseEntity<?> list(){
-		try {
 			return response(new ResponseBean(userService.list()));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
 	}
 	
 	@PostMapping("/add")
@@ -61,14 +55,8 @@ public class UserController extends BaseController {
 	
 	@PostMapping("/update")
 	public ResponseEntity<?> update(@RequestBody User user){
-		try {
 			userService.updateStatus(user);
 			return response(new ResponseBean(CommonConstant.OK));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return responseError(new ResponseBean(e.getMessage()), e);
-		}
 	}
 	
 	@GetMapping("/dashboard")
