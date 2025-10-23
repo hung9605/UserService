@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +45,6 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User add(UserDto dto) throws Exception {
-		
 		validateUserDto(dto);
         User user = userMapper.mapToModel(dto);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -53,8 +54,6 @@ public class UserServiceImpl implements UserService{
 		).collect(Collectors.toList());
 		authorityRepository.saveAll(authorities);
 		notify("User", "created");
-
-		
 		return user;
 	}
 
@@ -75,8 +74,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	@Transactional
 	public void updateEnable(String username,boolean status){
-		    User user = userRepository.findById(username)
-		                              .orElseThrow(() -> new UserNotFoundException());
+		    User user = userRepository.findById(username).orElseThrow(() -> new UserNotFoundException());
 		    user.setEnabled(status);
 		    userRepository.save(user);
 		    notify("User", "updated");
@@ -99,7 +97,12 @@ public class UserServiceImpl implements UserService{
 	
 	private void notify(String entity, String action) {
 	    NotificationMessage message = new NotificationMessage(entity, action);
-	    messagingTemplate.convertAndSend("/topic/notifications", message);
+	    messagingTemplate.convertAndSendToUser("tuannd", "/queue/notify", message);
 	}
+	
+//	public void sendNotificationToUser(String username, String message) {
+//        messagingTemplate.convertAndSendToUser(username, "/queue/notify", message);
+//    }
+
 
 }
