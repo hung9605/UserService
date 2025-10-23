@@ -21,4 +21,8 @@ public class NotificationController {
         messagingTemplate.convertAndSend("/topic/notifications", message);
         return ResponseEntity.ok("sent");
     }
+    
+    public void sendNotificationToUser(String username, String message) {
+        messagingTemplate.convertAndSendToUser(username, "/queue/notify", message);
+    }
 }
