@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import com.user.constants.AppHttpStatus;
+import com.user.constants.CommonConstant;
 import com.user.dto.ResponseBean;
 
 @Controller
@@ -42,6 +43,10 @@ public class BaseController {
         responseBean.setStatus(AppHttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(responseBean, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    protected ResponseEntity<ResponseBean> defaultResponse() {
+		return response(new ResponseBean(CommonConstant.OK));
+	}
 
 
 }
