@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService{
 	
 //	public void sendNotificationToUser(String username, String message) {
 //        messagingTemplate.convertAndSendToUser(username, "/queue/notify", message);
-//    }
+//  }
 
 
 }
