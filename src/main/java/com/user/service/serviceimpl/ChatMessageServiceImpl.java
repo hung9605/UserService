@@ -2,10 +2,11 @@ package com.user.service.serviceimpl;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.user.model.ChatMessage;
-import com.user.model.Customer;
+import com.user.model.User;
 import com.user.repository.ChatMessageRepository;
 import com.user.service.ChatMessageService;
 
@@ -30,9 +31,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 	}
 
 	@Override
-	public List<ChatMessage> getMessage(Customer customer) {
+	public List<ChatMessage> getMessage() {
 		// TODO Auto-generated method stub
-		return chatMessageRepository.findByCustomer(customer);
+		User user = new User();
+		user.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+		return chatMessageRepository.findByUser(user);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,9 +32,13 @@ public class ChatMessage extends BaseEntity {
 	String message;
 	
 	@ManyToOne
-	@JoinColumn(name = "customer_id")
+	@JoinColumn(name = "username")
 	@NotNull
-	Customer customer;
-
+	User user;
+	
+	@JsonIgnore
+	public User getUser() {
+	    return user;
+	}
 	
 }
