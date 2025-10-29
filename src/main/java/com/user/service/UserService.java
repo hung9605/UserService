@@ -13,4 +13,5 @@ public interface UserService {
 	void updateStatus(User user);
 	void updateEnable(String username,boolean enable);
 	void changePass(UserPassDto dto) throws Exception;
+	void resetPass(UserDto dto);
 }

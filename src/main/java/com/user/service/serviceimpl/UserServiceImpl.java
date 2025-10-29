@@ -2,6 +2,7 @@ package com.user.service.serviceimpl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.user.constants.CommonConstant;
 import com.user.dto.NotificationMessage;
 import com.user.dto.UserDto;
 import com.user.dto.UserPassDto;
@@ -44,15 +46,22 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public User add(UserDto dto) throws Exception {
 		validateUserDto(dto);
+		Optional<User> existingUserOpt = userRepository.findById(dto.getUsername());
+		boolean isNew = existingUserOpt.isEmpty();
         User user = userMapper.mapToModel(dto);
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(isNew) {
+        	user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }else {
+        	user.setPassword(existingUserOpt.get().getPassword());
+        	authorityRepository.deleteByUsername(user.getUsername());
+        }
 		User userSave = userRepository.save(user);
 		List<Authority> authorities = dto.getRoles().stream().map(item -> 
-		 new Authority(userSave.getUsername(), item.getCode())
-		).collect(Collectors.toList());
-		authorityRepository.saveAll(authorities);
+		 	new Authority(userSave.getUsername(), item.getCode())).collect(Collectors.toList());
+   		authorityRepository.saveAll(authorities);
 		notify("User", "created");
 		return user;
 	}
@@ -99,10 +108,13 @@ public class UserServiceImpl implements UserService{
 	    NotificationMessage message = new NotificationMessage(entity, action);
 	    messagingTemplate.convertAndSendToUser("tuannd", "/queue/notify", message);
 	}
+
+	@Override
+	public void resetPass(UserDto dto) {
+		// TODO Auto-generated method stub
+		userRepository.updatePassword(dto.getUsername(), passwordEncoder.encode(CommonConstant.DEFAULT_PASSWORD));
+	}
 	
-//	public void sendNotificationToUser(String username, String message) {
-//        messagingTemplate.convertAndSendToUser(username, "/queue/notify", message);
-//  }
 
 
 }

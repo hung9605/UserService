@@ -9,4 +9,5 @@ import com.user.model.Authority;
 public interface AuthorityRepository extends JpaRepository<Authority, Object> {
 	
 	List<Authority> findByUsername(String username) throws Exception;
+	void deleteByUsername(String username);
 }
