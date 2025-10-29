@@ -25,4 +25,5 @@ public class CommonConstant {
 	public static final String  STOCK_LOCATION = "MAIN";
 	public static final String  STOCK_STATUS = "IN_STOCK";
 	public static final String  STOCK_STATUS_OUT = "out_of_stock";
+	public static final String DEFAULT_PASSWORD ="123456";
 }

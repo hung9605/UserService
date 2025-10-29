@@ -72,10 +72,14 @@ public class UserController extends BaseController {
 	
 	@PostMapping("/changepass")
 	public ResponseEntity<?> changepass(@RequestBody UserPassDto dto) throws Exception{
-		
 			userService.changePass(dto);
 			return response(new ResponseBean(CommonConstant.OK));
-		
+	}
+	
+	@PostMapping("/reset")
+	public ResponseEntity<?> resetPass(@RequestBody UserDto dto){
+			userService.resetPass(dto);
+			return response(new ResponseBean(CommonConstant.OK));
 	}
 
 }
